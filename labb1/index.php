@@ -3,6 +3,8 @@
   require_once('src/controller/Login.php');
   require_once("src/model/Login.php");
 
+  session_start();
+  
   $HTMLPage = new \view\HTMLPage();
 
   if (isset($_POST['login'])) {

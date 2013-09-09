@@ -4,7 +4,13 @@
 	class HTMLPage {
 		private static $username = "username";
 		private static $password = "password";
+		private static $sessionUser;
 
+		public function __construct() {
+			if (isset($_SESSION['username'])) {
+				self::$sessionUser = $_SESSION['username'];
+			}
+		}
 		/**
 		 * @param String $title
 		 * @param String $body html body
@@ -23,7 +29,7 @@
 				<p>$message</p>
 				<form action='?login' method='POST'>
 					<label for='username'>Username:</label>
-					<input id='username' name='" . self::$username . "' type='text'>
+					<input id='username' name='" . self::$username . "' type='text' value='" . self::$sessionUser . "'>
 
 					<label for='password'>Password:</label>
 					<input id='password' name='" . self::$password ."' type='password'>

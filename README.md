@@ -1,4 +1,4 @@
 php
 ===
 
-Laborationer fö kursen Webbutveckling med PHP
+Laborationer för kursen Webbutveckling med PHP.
