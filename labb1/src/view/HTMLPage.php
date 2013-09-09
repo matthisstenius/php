@@ -2,6 +2,8 @@
 	namespace view;
 
 	class HTMLPage {
+		private static $username = "username";
+		private static $password = "password";
 
 		/**
 		 * @param String $title
@@ -19,16 +21,16 @@
 				<h1>Laboration 1 ms223cn</h1>
 				<h2>Ej inloggad</h2>
 				<p>$message</p>
-				<form action='/php/labb1/login.php' method='POST'>
+				<form action='?login' method='POST'>
 					<label for='username'>Username:</label>
-					<input id='username' name='username' type='text'>
+					<input id='username' name='" . self::$username . "' type='text'>
 
 					<label for='password'>Password:</label>
-					<input id='password' name='password' type='password'>
+					<input id='password' name='" . self::$password ."' type='password'>
 
-					<input type='submit' value='Log in'>
+					<input type='submit' value='Log in' name='login'>
 				</form>" 
-				. $this->getDateString() . 
+				. self::getDateString() . 
 			"</body>
 			</html>";
 		}
@@ -36,7 +38,7 @@
 		/**
 		 * @return [String] Datestring in swedish format
 		 */
-		public static function getDateString() {
+		private static function getDateString() {
 			$day = "";
 			$month = "";
 
@@ -105,6 +107,26 @@
 			}
 
 			return $day . " den " . date("j") . " " . $month . " år " . date("Y") . ". " . " Klockan är " . date("H") . ":" . date("i") . ":" . date("s");
+		}
+
+		/**
+		 * [getUsername description]
+		 * @return String
+		 */
+		public function getUsername() {
+			if (isset($_POST[self::$username])) {
+				return trim($_POST[self::$username]);
+			}
+		}
+
+		/**
+		 * [getPassword description]
+		 * @return String
+		 */
+		public function getPassword() {
+			if (isset($_POST[self::$password])) {
+				return trim($_POST[self::$password]);
+			}
 		}
 
 	}

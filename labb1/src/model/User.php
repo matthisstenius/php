@@ -2,15 +2,15 @@
 	namespace model;
 
 	class User {
-		private $username = "Matthis";
-		private $password =  "Password";	
+		private static $username = "admin";
+		private static $password =  "password";	
 
 		public function getUsername() {
-			return $this->username;
+			return self::$username;
 		}
 
 		public function getPassword() {
-			return $this->password;
+			return self::$password;
 		}
 
 
