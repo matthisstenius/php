@@ -1,4 +1,1 @@
-php
-===
-
-Laborationer fö kursen Webbutveckling med PHP
+MOHAHAHA YOU HAVE BEEN HACKED BY DJUNGELJENS
