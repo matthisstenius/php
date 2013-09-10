@@ -17,6 +17,7 @@ class Login {
 		}
 
 		elseif (strlen($htmlView->getPassword()) == 0) {
+			$_SESSION['username'] = $htmlView->getUsername();
 			throw new \Exception("Lösenord saknas");
 		}
 
