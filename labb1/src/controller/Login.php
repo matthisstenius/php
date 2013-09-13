@@ -9,13 +9,15 @@ class Login {
 	private $loginAtempt;
 	private $user;
 
+	/**
+	 * @param model\Login $loginAtempt
+	 */
 	public function __construct(\model\Login $loginAtempt) {
 		$this->loginAtempt = $loginAtempt;
 		$this->user = new \model\User();
 	}
 
 	/**
-	 * [isLoggedIn description]
 	 * @param  String  $username 
 	 * @param  String  $password  
 	 */
@@ -35,6 +37,5 @@ class Login {
 			$_SESSION['welcomeMessage'] = "inloggningen lyckades!";
 			echo $adminView->getAdminHTML();
 		}
-
 	}
 }

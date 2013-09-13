@@ -7,10 +7,8 @@ class Login {
 	private $password;
 
 	/**
-	 * [__construct description]
-	 * @param view\HTMLPage $htmlView
+	 * @param view\HTMLPage $htmlview
 	 */
-	
 	public function __construct(\view\HTMLPage $htmlView) {
 		if (strlen($htmlView->getUsername()) == 0) {
 			throw new \Exception("Användarnamn saknas");

@@ -17,6 +17,9 @@
 			}
 		}
 
+		/**
+		 * @return String
+		 */
 		public function getAdminHTML() {
 			return "<!DOCTYPE html>
 			<html>
