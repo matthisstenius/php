@@ -26,7 +26,8 @@
 		 * @return String, html string
 		 */
 		public function getHTML($title, $message) {
-			return "<html lang='sv'>
+			return "<!DOCTYPE html>
+			<html lang='sv'>
 			<head>
 				<title>$title</title>
 				<meta charset='utf8'>
@@ -124,7 +125,6 @@
 		}
 
 		/**
-		 * [getUsername description]
 		 * @return String
 		 */
 		public function getUsername() {
@@ -134,7 +134,6 @@
 		}
 
 		/**
-		 * [getPassword description]
 		 * @return String
 		 */
 		public function getPassword() {
