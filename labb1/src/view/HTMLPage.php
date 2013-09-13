@@ -54,8 +54,6 @@
 		 * @return [String] Datestring in swedish format
 		 */
 		private static function getDateString() {
-			$day = "";
-			$month = "";
 
 			switch (date("N")) {
 				case "1":
