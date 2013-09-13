@@ -26,12 +26,15 @@
 	
 	catch (Exception $e) {
 		echo $HTMLPage->getHTML($e->getMessage(), $e->getMessage());
+		exit;
 	}
   }
 
-  elseif (isset($_GET['logout'])) {
+  elseif (isset($_GET['logout']) && isset($_SESSION['user'])) {
   	unset($_SESSION['user']);
-  	echo $HTMLPage->getHTML('Laboration 1', 'Ange användarnamn samt lösenord för att logga in');
+  	$_SESSION['logoutMessage'] = "Du har nu loggat ut";
+  	echo $HTMLPage->getHTML('Laboration 1', $_SESSION['logoutMessage']);
+  	unset($_SESSION['logoutMessage']);
   }
 
   elseif (isset($_SESSION['user'])) {
