@@ -30,7 +30,7 @@
 			<html lang='sv'>
 			<head>
 				<title>$title</title>
-				<meta charset='utf8'>
+				<meta charset='utf-8'>
 			</head>
 			<body>
 				<h1>Laboration 1 ms223cn</h1>
