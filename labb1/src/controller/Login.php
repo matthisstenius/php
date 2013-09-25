@@ -6,11 +6,13 @@ require_once("src/model/User.php");
 require_once("src/view/AdminPage.php");
 
 class Login {
+	//@todo change variable name
 	private $loginAtempt;
 	private $user;
 
 	/**
 	 * @param model\Login $loginAtempt
+	 * @todo  change param name to correspond to instance var name
 	 */
 	public function __construct(\model\Login $loginAtempt) {
 		$this->loginAtempt = $loginAtempt;
