@@ -1,58 +1,13 @@
 <?php
-  require_once('src/view/HTMLPage.php');
-  require_once('src/controller/Login.php');
-  require_once("src/model/Login.php");
-  require_once("src/view/AdminPage.php");
 
-  session_start();
+require_once("src/controller/Application.php");
+require_once("src/view/HTMLPage.php");
 
-  $HTMLPage = new \view\HTMLPage();
+session_start();
 
-  if (isset($_POST['login'])) {
-  	try {
-  		$loginAtempt = new \model\Login($HTMLPage);	
-  	}
+$application = new \controller\Application();
+$html = $application->startApplication();
 
-  	catch (Exception $e) {
-  		echo $HTMLPage->getHtml($e->getMessage(), $e->getMessage());
-  		exit;
-  	}
-  	
-  	$login = new \controller\Login($loginAtempt);
-	
-	try {
-		$login->isLoggedIn();	
-	}
-	
-	catch (Exception $e) {
-		echo $HTMLPage->getHTML($e->getMessage(), $e->getMessage());
-		exit;
-	}
-  }
+$basehtml = new \view\HTMLPage();
+echo $basehtml->getHTML('Laboration 1', $html);
 
-  elseif (isset($_GET['logout']) && isset($_SESSION['user'])) {
-  	unset($_SESSION['user']);
-  	$_SESSION['logoutMessage'] = "Du har nu loggat ut";
-  	echo $HTMLPage->getHTML('Laboration 1', $_SESSION['logoutMessage']);
-  	unset($_SESSION['logoutMessage']);
-  }
-
-  elseif (isset($_SESSION['user'])) {
-  	if (isset($_SESSION['welcomeMessage'])) {
-  		unset($_SESSION['welcomeMessage']);
-  	}
-
-  	$AdminPage = new \view\AdminPage($_SESSION['user']);
-
-  	echo $AdminPage->getAdminHTML();
-  }
-
-  else {
-  	echo $HTMLPage->getHTML('Laboration 1', 'Ange användarnamn samt lösenord för att logga in');
-  }
-  
-
-
-
-
-	

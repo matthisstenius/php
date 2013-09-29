@@ -2,36 +2,49 @@
 	namespace view;
 
 	class AdminPage {
-		private $username;
+		/**
+		 * @var model\User $user
+		 */
+		private $user;
 
-		public function __construct($username) {
-			$this->username = $username;
+		private static $loginSuccsessMessage = "view::AdminPage::loginSuccsessMessage";
+
+		private static $logoutButton = "logout";
+		public function __construct() {
+			$this->user = new \model\User();
 		}
 
-		/** 
+		public function setMessage() {
+			if ($this->user->isLoggedIn()) {
+				$_SESSION[self::$loginSuccsessMessage] = true;
+			}
+		}
+	
+		/**
 		 * @return Boolean
 		 */
-		private function getSessionValue() {
-			if (isset($_SESSION['welcomeMessage'])) {
-				return $_SESSION['welcomeMessage'];
-			}
+		public function userLoggesOut() {
+			return isset($_GET[self::$logoutButton]);
 		}
 
 		/**
-		 * @return String
+		 * @return String html
 		 */
 		public function getAdminHTML() {
-			return "<!DOCTYPE html>
-			<html>
-			<head>
-				<title></title>
-				<meta charset='utf-8'>
-			</head>
-			<body>
-				<h1>$this->username är inloggad</h1>
-				<p>". $this->getSessionValue() ."</p>
-				<a href='?logout'>Logga ut</a>
-			</body>
-			</html>";
+			if ($this->user->isLoggedIn()) {
+				$html = "<h1>" . $this->user->getUsername() . " är inloggad</h1>";
+			}
+
+			if (isset($_SESSION[self::$loginSuccsessMessage])) {
+				if ($_SESSION[self::$loginSuccsessMessage]) {
+					$html .= "<p>inloggningen lyckades</p>";
+				}
+
+				unset($_SESSION[self::$loginSuccsessMessage]);
+			}
+
+			$html .= "<a href='?" . self::$logoutButton ."'>Logga ut</a>";
+					
+			return $html;
 		}
 	}

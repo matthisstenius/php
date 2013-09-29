@@ -6,38 +6,46 @@ require_once("src/model/User.php");
 require_once("src/view/AdminPage.php");
 
 class Login {
-	//@todo change variable name
-	private $loginAtempt;
+	/**
+	 * @var model\Login $login
+	 */
+	private $login;
+
+	/**
+	 * @var model\User $user
+	 */
 	private $user;
 
 	/**
-	 * @param model\Login $loginAtempt
-	 * @todo  change param name to correspond to instance var name
+	 * @var view\HTMLPage $htmlPage
 	 */
-	public function __construct(\model\Login $loginAtempt) {
-		$this->loginAtempt = $loginAtempt;
+	private $formView;
+
+	/**
+	 * @param view\FormHTML $formView
+	 */
+	public function __construct(\view\FormHTML $formView) {
+		$this->formView = $formView;
 		$this->user = new \model\User();
 	}
 
 	/**
-	 * @param  String  $username 
-	 * @param  String  $password  
+	 * @return String htmlstring
+	 * @throws Exception If username and/or passwoed does not match
 	 */
-	public function isLoggedIn() {
-		if ($this->loginAtempt->getUsername() != $this->user->getUsername() || $this->loginAtempt->getPassword() != $this->user->getPassword()) {
-			$_SESSION['username'] = $this->loginAtempt->getUsername();
+	public function logIn() {
+		if ($this->formView->getUsername() != $this->user->getUsername() 
+			|| $this->formView->getPassword() != $this->user->getPassword()) {
+			
+			$this->formView->setMessage();
 			throw new \Exception("Fel användarnamn och/eller lösenord");
 		}
 
 		else {
-			if (isset($_SESSION['username'])) {
-				unset($_SESSION['username']);
-			}
-
+			$this->user->setLogin();
 			$adminView = new \view\AdminPage($this->user->getUsername());
-			$_SESSION['user'] = $this->user->getUsername();
-			$_SESSION['welcomeMessage'] = "inloggningen lyckades!";
-			echo $adminView->getAdminHTML();
+			$adminView->setMessage();
+			return $adminView->getAdminHTML();
 		}
 	}
 }
