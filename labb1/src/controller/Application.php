@@ -23,42 +23,50 @@ class Application {
 
 	public function __construct() {
 		$this->user = new \model\User();
-		$this->adminPage = new \view\AdminPage();
 		$this->formView = new \view\FormHTML();
+		$this->adminPage = new \view\AdminPage();
 	}
 
 	/**
 	 * @return String htmlstring
 	 */
 	public function startApplication() {
-		if ($this->user->isLoggedIn()) {
-		  	if($this->adminPage->userLoggesOut()) {
-		  		$this->user->unsetLogin();
-		  		$this->formView->setMessage();
-		  	}
-
-		  	else {
-		  		return $this->adminPage->getAdminHTML();
-		  		exit;
-		  	}
-	 	}
+		if ($this->formView->getRememberCookie() == $this->user->token && !$this->adminPage->userLoggesOut()) {
+			$this->user->setLogin();
+			$this->adminPage->setCookieLoginMessage();
+			return $this->adminPage->getAdminHTML();
+		}
 
 		else {
-			if ($this->formView->userLoggesIn()) {
-		  		try {
-		  			$this->formView->getUsername();
-		  			$this->formView->getPassword();
-			  		$login = new \controller\Login($this->formView);
-			  		return $login->logIn();
-			  		exit;
-				}
-
-				catch (\Exception $e) {
+			if ($this->user->isLoggedIn()) {
+			  	if($this->adminPage->userLoggesOut()) {
+			  		$this->user->unsetLogin();
+			  		$this->formView->removeRememberCookie();
 			  		$this->formView->setMessage();
-			  		$this->formView->errorMessage = $e->getMessage();
 			  	}
-		  	}
+
+			  	else {
+			  		return $this->adminPage->getAdminHTML();
+			  	}
+		 	}
+
+			else {
+				if ($this->formView->userLoggesIn()) {
+			  		try {
+			  			$this->formView->getUsername();
+			  			$this->formView->getPassword();
+				  		$login = new \controller\Login($this->formView);
+				  		return $login->logIn();
+					}
+
+					catch (\Exception $e) {
+				  		$this->formView->setMessage();
+				  		$this->formView->errorMessage = $e->getMessage();
+				  	}
+			  	}
+			}
 		}
+
 		return $this->formView->getFormHtml();
 	}
 }

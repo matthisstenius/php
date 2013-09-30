@@ -5,6 +5,8 @@ namespace view;
 class FormHTML {
 	private static $username = "username";
 	private static $password = "password";
+	private static $rememberMe = "remember";
+	private static $rememberCookie = "view::FormHTML::remember";
 
 	private static $loginButton = "login";
 
@@ -71,7 +73,8 @@ class FormHTML {
 					<label for='" . self::$password ."'>Password:</label>
 					<input id='" . self::$password ."' name='" . self::$password ."' 
 					type='password'>
-
+					<label for='remember'>Kom ihåg mig</label>
+					<input type='checkbox' id='remember' name='remember'>
 					<input type='submit' value='Log in' name='" . self::$loginButton . "'>
 				</form>" 
 				. self::getLocalDayString() . " den " . date("j") . " " 
@@ -188,6 +191,32 @@ class FormHTML {
 		else {
 			return $this->sanitize($_POST[self::$password]);
 		}
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function getRememberMe() {
+		if (isset($_POST[self::$rememberMe])) {
+			return $_POST[self::$rememberMe];
+		}
+	}
+
+	public function setRememberCookie($token) {
+		setcookie(self::$rememberCookie, $token, time()+60*60*24*30);
+	}
+
+	/**
+	 * @return String token
+	 */
+	public function getRememberCookie() {
+		if (isset($_COOKIE[self::$rememberCookie])) {
+			return $_COOKIE[self::$rememberCookie];
+		}
+	}
+
+	public function removeRememberCookie() {
+		setcookie(self::$rememberCookie, "", time() - 3600);
 	}
 
 	/**

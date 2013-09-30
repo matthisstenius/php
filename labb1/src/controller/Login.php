@@ -22,11 +22,17 @@ class Login {
 	private $formView;
 
 	/**
+	 * @var view\AdminPafe $adminView
+	 */
+	private $adminView;
+
+	/**
 	 * @param view\FormHTML $formView
 	 */
 	public function __construct(\view\FormHTML $formView) {
 		$this->formView = $formView;
 		$this->user = new \model\User();
+		$this->adminView = new \view\AdminPage();
 	}
 
 	/**
@@ -42,10 +48,14 @@ class Login {
 		}
 
 		else {
+			if ($this->formView->getRememberMe()) {
+				$this->formView->setRememberCookie($this->user->token);
+				$this->adminView->setCookieLoginMessage();
+			}
+
 			$this->user->setLogin();
-			$adminView = new \view\AdminPage($this->user->getUsername());
-			$adminView->setMessage();
-			return $adminView->getAdminHTML();
+			$this->adminView->setMessage();
+			return $this->adminView->getAdminHTML();
 		}
 	}
 }

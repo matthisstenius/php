@@ -2,13 +2,15 @@
 	namespace model;
 
 	class User {
-		/**
-		 * @todo refactor this validation to view and remove this class
-		 */
 		private static $username = "admin";
 		private static $password =  "password";	
 
 		private static $setLoginStatus = "model::User::setLoginStatus";
+
+		/**
+		 * @var String
+		 */
+		public $token = "3468c4618ce69651192682c1324c2562";
 
 		/**
 		 * @return String
@@ -38,5 +40,4 @@
 		public function unsetLogin() {
 			unset($_SESSION[self::$setLoginStatus]);
 		}
-
 	}
