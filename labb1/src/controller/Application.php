@@ -43,8 +43,6 @@ class Application {
 		  	}
 	 	}
 
-	 	
-
 	 	if ($this->formView->userLoggesIn()) {
 	  		try {
 	  			$this->formView->getUsername();
