@@ -243,6 +243,6 @@ class FormHTML {
 	}
 
 	public function removeRememberCookie() {
-		setcookie(self::$rememberCookie, "", time() - 3600);
+		setcookie(self::$rememberCookie, "", time() - 3600, "/", "", false, true);
 	}
 }
