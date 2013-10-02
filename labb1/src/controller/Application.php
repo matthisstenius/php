@@ -4,6 +4,7 @@ namespace controller;
 require_once("src/view/FormHTML.php");
 require_once("src/controller/Login.php");
 require_once("src/view/AdminPage.php");
+require_once("src/view/SessionProtect.php");
 
 class Application {
 	/**
@@ -21,16 +22,31 @@ class Application {
 	 */
 	private $formView;
 
+	/**
+	 * @var view\SessionProtect
+	 */
+	private $sessionProtect;
+
 	public function __construct() {
 		$this->user = new \model\User();
 		$this->formView = new \view\FormHTML($this->user);
 		$this->adminPage = new \view\AdminPage($this->user);
+		$this->sessionProtect = new \view\SessionProtect();
 	}
 
 	/**
 	 * @return String htmlstring
 	 */
 	public function startApplication() {
+		try {
+			$this->sessionProtect->checkSessionTheft();
+		}
+
+		catch (\Exception $e) {
+			var_dump($e->getMessage());
+			return $this->formView->getFormHtml();
+		}
+
 		if ($this->user->isLoggedIn()) {
 		  	if($this->adminPage->userLoggesOut()) {
 		  		$this->user->unsetLogin();
