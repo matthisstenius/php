@@ -18,7 +18,8 @@ class HTMLPage {
 
 		$html .= $body;
 
-		"</body>
+		$html .= "
+		</body>
 		</html>";
 
 		return $html;

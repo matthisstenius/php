@@ -22,8 +22,8 @@
 			}
 		}
 		
-		public function setCookieLoginMessage() {
-			$_SESSION[self::$cookieLogin] = true;
+		public function setCookieLoginMessage($message) {
+			$_SESSION[self::$cookieLogin] = $message;
 		}
 
 		/**
@@ -51,10 +51,13 @@
 
 			if (isset($_SESSION[self::$cookieLogin])) {
 				if ($_SESSION[self::$cookieLogin]) {
-					$html .= "<p>inloggningen lyckades dina uppgifter är sparade</p>";
+					$html .= "<p>";
+					$html .= $_SESSION[self::$cookieLogin];
+					$html .= "</p>";
 				}
 
 				unset($_SESSION[self::$cookieLogin]);
+				unset($_SESSION[self::$loginSuccsessMessage]);
 			}
 
 			$html .= "<a href='?" . self::$logoutButton ."'>Logga ut</a>";

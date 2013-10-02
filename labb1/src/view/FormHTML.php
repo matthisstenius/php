@@ -7,6 +7,7 @@ class FormHTML {
 	private static $password = "password";
 	private static $rememberMe = "remember";
 	private static $rememberCookie = "view::FormHTML::remember";
+	private static $cookieEndtimeFile = "endtime.txt";
 
 	private static $loginButton = "login";
 
@@ -14,9 +15,21 @@ class FormHTML {
 	private static $sessionLogoutMessage = "view::HTMLPage::logoutMessage";
 
 	/**
+	 * @var model\User
+	 */
+	private $user;
+
+	/**
 	 * @var String
 	 */
 	public $errorMessage;
+
+	/**
+	 * @param model\User $user
+	 */
+	public function __construct(\model\User $user) {
+		$this->user = $user;
+	}
 
 	public function setMessage() {
 		if ($this->userLoggesIn()) {
@@ -37,7 +50,6 @@ class FormHTML {
 
 	/**
 	 * @return String htmlstring
-	 * @todo  refactor length
 	 */
 	public function getFormHtml() {
 		$html = "<h1>Laboration 1 ms223cn</h1>
@@ -194,36 +206,43 @@ class FormHTML {
 	}
 
 	/**
+	 * @param  String $input
+	 * @return String Sanitized string
+	 */
+	private function sanitize($input) {
+		return html_entity_decode(trim($input));
+	}
+
+	/**
 	 * @return boolean
 	 */
 	public function getRememberMe() {
-		if (isset($_POST[self::$rememberMe])) {
-			return $_POST[self::$rememberMe];
-		}
+		return isset($_POST[self::$rememberMe]);
 	}
 
-	public function setRememberCookie($token) {
-		setcookie(self::$rememberCookie, $token, time()+60*60*24*30);
+	public function setRememberCookie() {
+		$endtime = time() + 5;
+		file_put_contents(self::$cookieEndtimeFile, "$endtime");
+		setcookie(self::$rememberCookie, $this->user->token, $endtime);
 	}
 
 	/**
 	 * @return String token
+	 * @throws Exception If cookie has been tempered with
 	 */
 	public function getRememberCookie() {
 		if (isset($_COOKIE[self::$rememberCookie])) {
+			$fileEndtime = file_get_contents(self::$cookieEndtimeFile);
+
+			if ($_COOKIE[self::$rememberCookie] != $this->user->token || time() > $fileEndtime) {
+				throw new \Exception("Felaktig information i cookie");
+			}
+
 			return $_COOKIE[self::$rememberCookie];
 		}
 	}
 
 	public function removeRememberCookie() {
 		setcookie(self::$rememberCookie, "", time() - 3600);
-	}
-
-	/**
-	 * @param  String $input
-	 * @return String Sanitized string
-	 */
-	private function sanitize($input) {
-		return html_entity_decode(trim($input));
 	}
 }

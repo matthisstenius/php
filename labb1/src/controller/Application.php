@@ -23,7 +23,7 @@ class Application {
 
 	public function __construct() {
 		$this->user = new \model\User();
-		$this->formView = new \view\FormHTML();
+		$this->formView = new \view\FormHTML($this->user);
 		$this->adminPage = new \view\AdminPage();
 	}
 
@@ -31,41 +31,47 @@ class Application {
 	 * @return String htmlstring
 	 */
 	public function startApplication() {
-		if ($this->formView->getRememberCookie() == $this->user->token && !$this->adminPage->userLoggesOut()) {
-			$this->user->setLogin();
-			$this->adminPage->setCookieLoginMessage();
-			return $this->adminPage->getAdminHTML();
-		}
+		if ($this->user->isLoggedIn()) {
+		  	if($this->adminPage->userLoggesOut()) {
+		  		$this->user->unsetLogin();
+		  		$this->formView->removeRememberCookie();
+		  		$this->formView->setMessage();
+		  	}
 
-		else {
-			if ($this->user->isLoggedIn()) {
-			  	if($this->adminPage->userLoggesOut()) {
-			  		$this->user->unsetLogin();
-			  		$this->formView->removeRememberCookie();
-			  		$this->formView->setMessage();
-			  	}
+		  	else {
+		  		return $this->adminPage->getAdminHTML();
+		  	}
+	 	}
 
-			  	else {
-			  		return $this->adminPage->getAdminHTML();
-			  	}
-		 	}
-
-			else {
-				if ($this->formView->userLoggesIn()) {
-			  		try {
-			  			$this->formView->getUsername();
-			  			$this->formView->getPassword();
-				  		$login = new \controller\Login($this->formView);
-				  		return $login->logIn();
-					}
-
-					catch (\Exception $e) {
-				  		$this->formView->setMessage();
-				  		$this->formView->errorMessage = $e->getMessage();
-				  	}
-			  	}
+	 	if ($this->formView->userLoggesIn()) {
+	  		try {
+	  			$this->formView->getUsername();
+	  			$this->formView->getPassword();
+		  		$login = new \controller\Login($this->formView, $this->adminPage, $this->user);
+		  		return $login->logIn();
 			}
-		}
+
+			catch (\Exception $e) {
+		  		$this->formView->setMessage();
+		  		$this->formView->errorMessage = $e->getMessage();
+		  	}
+	  	}
+
+	 	if (!$this->adminPage->userLoggesOut()) {
+			try {
+		  		$this->formView->getRememberCookie();
+		  		if ($this->formView->getRememberCookie() == $this->user->token) {
+		  			$this->user->setLogin();
+					$this->adminPage->setCookieLoginMessage("inloggningen lyckades via cookies");
+					return $this->adminPage->getAdminHTML();
+		  		}
+		  	}
+
+		  	catch(\Exception $e) {
+		  		$this->formView->removeRememberCookie();
+			  	$this->formView->errorMessage = $e->getMessage();
+		  	}	
+	  	}
 
 		return $this->formView->getFormHtml();
 	}

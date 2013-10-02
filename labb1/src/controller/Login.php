@@ -28,11 +28,13 @@ class Login {
 
 	/**
 	 * @param view\FormHTML $formView
+	 * @param view\Adminpage $adminView
+	 * @param model\User $user
 	 */
-	public function __construct(\view\FormHTML $formView) {
+	public function __construct(\view\FormHTML $formView, \view\AdminPage $adminView, \model\User $user) {
 		$this->formView = $formView;
-		$this->user = new \model\User();
-		$this->adminView = new \view\AdminPage();
+		$this->user = $user;
+		$this->adminView = $adminView;
 	}
 
 	/**
@@ -49,8 +51,8 @@ class Login {
 
 		else {
 			if ($this->formView->getRememberMe()) {
-				$this->formView->setRememberCookie($this->user->token);
-				$this->adminView->setCookieLoginMessage();
+				$this->formView->setRememberCookie();
+				$this->adminView->setCookieLoginMessage("inloggningen lyckades och vi kommer ihåg dig till nästa gång");
 			}
 
 			$this->user->setLogin();
