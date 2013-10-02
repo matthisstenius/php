@@ -221,7 +221,7 @@ class FormHTML {
 	}
 
 	public function setRememberCookie() {
-		$endtime = time() + 5;
+		$endtime = time() + 60 * 60 * 24 * 25;
 		file_put_contents(self::$cookieEndtimeFile, "$endtime");
 		setcookie(self::$rememberCookie, $this->user->token, $endtime);
 	}

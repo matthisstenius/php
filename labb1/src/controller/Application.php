@@ -43,6 +43,8 @@ class Application {
 		  	}
 	 	}
 
+	 	
+
 	 	if ($this->formView->userLoggesIn()) {
 	  		try {
 	  			$this->formView->getUsername();
@@ -57,9 +59,10 @@ class Application {
 		  	}
 	  	}
 
-	 	if (!$this->adminPage->userLoggesOut()) {
+	  	if (!$this->adminPage->userLoggesOut()) {
 			try {
 		  		$this->formView->getRememberCookie();
+		  		
 		  		if ($this->formView->getRememberCookie() == $this->user->token) {
 		  			$this->user->setLogin();
 					$this->adminPage->setCookieLoginMessage("inloggningen lyckades via cookies");
@@ -70,9 +73,9 @@ class Application {
 		  	catch(\Exception $e) {
 		  		$this->formView->removeRememberCookie();
 			  	$this->formView->errorMessage = $e->getMessage();
+			  	return $this->formView->getFormHtml();
 		  	}	
 	  	}
-
 		return $this->formView->getFormHtml();
 	}
 }
