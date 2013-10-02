@@ -43,7 +43,6 @@ class Application {
 		}
 
 		catch (\Exception $e) {
-			var_dump($e->getMessage());
 			return $this->formView->getFormHtml();
 		}
 
