@@ -24,7 +24,7 @@ class Application {
 	public function __construct() {
 		$this->user = new \model\User();
 		$this->formView = new \view\FormHTML($this->user);
-		$this->adminPage = new \view\AdminPage();
+		$this->adminPage = new \view\AdminPage($this->user);
 	}
 
 	/**

@@ -12,8 +12,11 @@
 
 		private static $logoutButton = "logout";
 
-		public function __construct() {
-			$this->user = new \model\User();
+		/**
+		 * @param model\User $user
+		 */
+		public function __construct(\model\User $user) {
+			$this->user = $user;
 		}
 
 		public function setMessage() {
