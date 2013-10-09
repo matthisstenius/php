@@ -54,12 +54,17 @@ class Application {
 			return $this->formView->getFormHtml();
 		}
 
-		if ($this->adminPage->userLoggesOut() && $this->user->isLoggedIn()) {
-		  	$this->user->unsetLogin();
-		  	$this->formView->removeRememberCookie();
-		  	$this->formView->setSessionMessage();
-	 	}
-
+		if ($this->user->isLoggedIn()) {
+			if ($this->adminPage->userLoggesOut()) {
+			  	$this->user->unsetLogin();
+			  	$this->formView->removeRememberCookie();
+			  	$this->formView->setSessionMessage();
+		 	}
+		 	else {
+		 		return $this->adminPage->getAdminHTML();
+		 	}
+		}
+		
 	 	try {
 	 		if ($this->formView->userLoggesIn() && $this->formView->usernameHasValue() 
 	 			&& $this->formView->passwordHasValue()) {
@@ -68,7 +73,7 @@ class Application {
 	  	}
 
 	  	catch (\Exception $e) {
-
+	  		$this->formView->setSessionMessage();
 		}
 
 	  	if (!$this->adminPage->userLoggesOut() && $this->formView->hasRememberCookie()) {
