@@ -110,7 +110,6 @@ class LoginView implements \login\model\LoginObserver {
 	
 	public function registrationOK() {
 		if ($this->registerModel->registrationOK()) {
-			//echo "kommer";
 			$this->message = "<p>Registrering av ny användare lyckades</p>";
 		}
 	}

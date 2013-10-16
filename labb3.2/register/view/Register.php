@@ -17,9 +17,13 @@ class Register {
 	private $messages;
 
 	public function __construct() {
+		$this->userList = new \login\model\UserList();
 		$this->messages = "";
 	}
 
+	/**
+	 * @return string HTML
+	 */
 	public function getRegisterForm() {
 		$user = $this->getSanitizedName();
 
@@ -41,6 +45,9 @@ class Register {
 		return $html;
 	}
 
+	/**
+	 * @return string HTML
+	 */
 	private function getHeader() {
 		return "<h1>Ej inloggad, Registrera ny användare</h1>";
 	}
@@ -53,34 +60,52 @@ class Register {
 		return isset($_GET[self::$save]);
 	}
 
+	/**
+	 * @return string HTML
+	 */
 	private function getBackButton() {
 		return "<a href='?'>Tillbaka</a>";
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getName() {
 		if (isset($_POST[self::$name]) && strlen($_POST[self::$name])) {
 			return $_POST[self::$name];
-		}		
+		}	
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getSanitizedName() {
 		if (isset($_POST[self::$name])) {
 			return \common\Filter::sanitizeString($_POST[self::$name]);
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getPassword() {
 		if (isset($_POST[self::$password])) {
 			return \common\Filter::sanitizeString($_POST[self::$password]);
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getPasswordAgain() {
 		if (isset($_POST[self::$passwordAgain])) {
 			return \common\Filter::sanitizeString($_POST[self::$passwordAgain]);
 		}
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function passwordsMatch() {
 		if ($this->getPassword() == $this->getPasswordAgain()) {
 			return true;
@@ -89,14 +114,24 @@ class Register {
 		return false;
 	}
 
-
+	/**
+	 * @return login\model\UserCredentials
+	 */
 	public function getUserCredentials() {
 		return \login\model\UserCredentials::create(new \login\model\UserName($this->getName()), 
 													\login\model\Password::fromCleartext($this->getPassword()));
 	}
 
+	/**
+	 * @return string HTML
+	 */
+	public function userExists() {
+		$this->messages .= "<p>Användarnamnet redan upptaget</p>";
+	}
+	/**
+	 * @return string HTML
+	 */
 	public function registrationFailed() {
-		echo "kommer";
 		if ($this->getName() == "" || strlen($this->getName()) < 3) {
 			$this->messages .= "<p>Användarnamn har för få tecken. Minst 3 tecken</p>";
 		}
@@ -113,12 +148,8 @@ class Register {
 			$this->messages .= "<p>Lösenorden matchar inte</p>";
 		}
 
-		else if (\common\Filter::hasTags($this->getName())) {
+		if (\common\Filter::hasTags($this->getName())) {
 			$this->messages .= "Användarnamnet innehåller ogiltiga tecken";
-		}
-
-		else {
-			$this->messages .= "<p>Användarnamnet redan upptaget</p>";
 		}
 	}
 }

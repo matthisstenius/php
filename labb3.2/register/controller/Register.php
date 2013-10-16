@@ -10,12 +10,23 @@ class Register {
 	 */
 	private $registerView;
 
+	/**
+	 * @var register\model
+	 */
+	private $registerModel;
+
+	/**
+	 * @param register\view\Register  $registerView 
+	 * @param register\Model\Register $registerModel
+	 */
 	public function __construct(\register\view\Register $registerView, \register\Model\Register $registerModel) {
 		$this->registerView = $registerView;
 		$this->registerModel = $registerModel;
 	}
 
-	//@todo login after succsessful registration
+	/**
+	 * @return bool
+	 */
 	public function registerAccount() {
 		if ($this->registerView->isSaving()) {
 			if ($this->registerView->passwordsMatch()) {
@@ -26,8 +37,14 @@ class Register {
 				}
 
 				catch (\Exception $e) {
-					var_dump($e->getMessage());
-					$this->registerView->registrationFailed();
+					//@todo this stinks but running out of time...
+					if ($e->getCode() == 1) {
+						$this->registerView->userExists();
+					}
+
+					else {
+						$this->registerView->registrationFailed();
+					}
 				}	
 			}
 
